@@ -7,7 +7,6 @@ import 'package:project/models/show.dart';
 import 'package:project/services/api/api.dart';
 
 part 'main_screen_event.dart';
-
 part 'main_screen_state.dart';
 
 class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
@@ -34,7 +33,7 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
   }
 
   void _getDataFromList(GetModelOfShowEvent event, emit) {
-    Show res = Show();
+    Show? res = Show();
     _data?.forEach(
       (element) {
         if (element.show?.name == event.modelName) {
@@ -42,6 +41,13 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
         }
       },
     );
-    emit(GetShowModelState(res));
+    emit(GetShowModelState(res!));
+    // res = null;
+    cleanData();
+  }
+
+  void cleanData() {
+    _data = null;
+    _res = [];
   }
 }

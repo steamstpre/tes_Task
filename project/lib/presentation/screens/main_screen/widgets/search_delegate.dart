@@ -10,6 +10,7 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     _bloc.add(GetModelOfShowEvent(query));
+    query = "";
     return DetailsScreen();
   }
 
@@ -27,7 +28,7 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     List<String?> res = [];
-    _bloc.add(GetDataEvent(query));
+
 
     return BlocConsumer<MainScreenBloc, MainScreenState>(
       listener: (context, state) {
@@ -36,6 +37,7 @@ class CustomSearchDelegate extends SearchDelegate {
         }
       },
       builder: (context, state) {
+        _bloc.add(GetDataEvent(query));
         return ListView.builder(
           itemCount: res.length,
           itemBuilder: (context, index) {
