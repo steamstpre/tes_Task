@@ -16,3 +16,5 @@ class GetShowModelState extends MainScreenState {
 
   GetShowModelState(this.model);
 }
+
+class LoadingDataState extends MainScreenState {}

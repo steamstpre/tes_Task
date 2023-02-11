@@ -21,7 +21,7 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
 
   Future<void> _getDataFromApi(GetDataEvent event, emit) async {
     _data = await _api.sentRequset(event.name);
-
+    emit(LoadingDataState());
     if (_data != null) {
       _data?.forEach(
         (element) {

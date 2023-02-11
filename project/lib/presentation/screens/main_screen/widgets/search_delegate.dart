@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -23,12 +22,13 @@ class CustomSearchDelegate extends SearchDelegate {
   }
 
   @override
-  List<Widget>? buildActions(BuildContext context) {}
+  List<Widget>? buildActions(BuildContext context) {
+    return null;
+  }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     List<String?> res = [];
-
 
     return BlocConsumer<MainScreenBloc, MainScreenState>(
       listener: (context, state) {
@@ -38,18 +38,28 @@ class CustomSearchDelegate extends SearchDelegate {
       },
       builder: (context, state) {
         _bloc.add(GetDataEvent(query));
-        return ListView.builder(
-          itemCount: res.length,
-          itemBuilder: (context, index) {
-            final itemText = res[index];
-            return ListTile(
-              title: Text(itemText!),
-              onTap: () {
-                query = itemText;
-                showResults(context);
-              },
-            );
-          },
+        if (state is LoadingDataState) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (state is GetDataState) {
+          return ListView.builder(
+            itemCount: res.length,
+            itemBuilder: (context, index) {
+              final itemText = res[index];
+              return ListTile(
+                title: Text(itemText!),
+                onTap: () {
+                  query = itemText;
+                  showResults(context);
+                },
+              );
+            },
+          );
+        }
+        return RichText(
+          text: const TextSpan(text: 'Please enter text'),
         );
       },
     );
