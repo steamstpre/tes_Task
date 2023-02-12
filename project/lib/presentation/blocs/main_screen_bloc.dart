@@ -34,6 +34,7 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
 
   void _getDataFromList(GetModelOfShowEvent event, emit) {
     Show? res = Show();
+    emit(LoadingDataState());
     _data?.forEach(
       (element) {
         if (element.show?.name == event.modelName) {

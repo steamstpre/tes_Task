@@ -4,8 +4,24 @@ import 'package:project/models/show.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailsView extends StatelessWidget {
-  Show? model;
-  DetailsView({Key? key, required this.model}) : super(key: key);
+  Show? _model;
+  DetailsView({Key? key, required Show? model})
+      : _model = model,
+        super(key: key);
+
+  final _snackBar = const SnackBar(
+    content: Text('no follow link'),
+  );
+
+  Future<void> _launchURL(String url, BuildContext context) async {
+    Uri uri = Uri.parse(url);
+    if (!await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw Exception('Could not launch $url');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +37,7 @@ class DetailsView extends StatelessWidget {
             child: RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
-                text: model?.name != null ? model?.name! : 'name',
+                text: _model?.name != null ? _model?.name! : 'name',
                 style: TextStyle(fontSize: 20.w),
               ),
             ),
@@ -29,12 +45,12 @@ class DetailsView extends StatelessWidget {
           SizedBox(
             height: 30.h,
           ),
-          model?.image?.medium != null
+          _model?.image?.medium != null
               ? SizedBox(
                   width: 350.w,
                   height: 250.h,
                   child: Image.network(
-                    model!.image!.medium as String,
+                    _model!.image!.medium as String,
                   ),
                 )
               : SizedBox(
@@ -45,14 +61,14 @@ class DetailsView extends StatelessWidget {
           SizedBox(
             height: 30.h,
           ),
-          model?.genres != null
+          _model?.genres != null && _model!.genres!.isNotEmpty
               ? SizedBox(
                   height: 300.h,
                   width: 360.w,
                   child: ListView.builder(
-                    itemCount: model?.genres?.length,
+                    itemCount: _model?.genres?.length,
                     itemBuilder: (context, index) {
-                      final item = model?.genres![index];
+                      final item = _model?.genres![index];
                       return SizedBox(
                         width: 50.w,
                         height: 50.h,
@@ -73,13 +89,13 @@ class DetailsView extends StatelessWidget {
           SizedBox(
             height: 10.h,
           ),
-          model?.rating?.average != null
+          _model?.rating?.average != null
               ? SizedBox(
                   width: 50.w,
                   height: 20.h,
                   child: RichText(
                     text: TextSpan(
-                      text: model?.rating?.average.toString(),
+                      text: _model?.rating?.average.toString(),
                       style: TextStyle(
                         fontSize: 55.w,
                         color: Colors.white,
@@ -88,13 +104,13 @@ class DetailsView extends StatelessWidget {
                   ),
                 )
               : Container(),
-          model?.status != null
+          _model?.status != null
               ? SizedBox(
                   width: 60.w,
                   height: 30.h,
                   child: RichText(
                     text: TextSpan(
-                      text: model?.status,
+                      text: _model?.status,
                       style: TextStyle(
                         fontSize: 25.w,
                         color: Colors.white,
@@ -106,19 +122,12 @@ class DetailsView extends StatelessWidget {
           SizedBox(
             height: 10.h,
           ),
-          model?.officialSite != null
+          _model?.officialSite != null
               ? SizedBox(
                   child: InkWell(
-                    child: Text(model?.officialSite as String),
+                    child: Text(_model?.officialSite as String),
                     onTap: () async {
-                      const snackBar = SnackBar(
-                        content: Text('no follow link'),
-                      );
-                      var url = Uri.parse(model?.officialSite as String);
-                      await canLaunchUrl(url)
-                          ? await launchUrl(url)
-                          : ScaffoldMessenger.of(context)
-                              .showSnackBar(snackBar);
+                      await _launchURL(_model?.officialSite as String, context);
                     },
                   ),
                 )

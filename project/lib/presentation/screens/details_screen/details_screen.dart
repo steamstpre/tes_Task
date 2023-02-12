@@ -17,12 +17,12 @@ class DetailsScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        if (state is GetShowModelState) {
-          return DetailsView(model: model);
+        if (state is LoadingDataState) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+        return DetailsView(model: model);
       },
     );
   }
