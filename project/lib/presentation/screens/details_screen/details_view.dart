@@ -4,16 +4,12 @@ import 'package:project/models/show.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailsView extends StatelessWidget {
-  Show? _model;
-  DetailsView({Key? key, required Show? model})
+  final Show? _model;
+  const DetailsView({Key? key, required Show? model})
       : _model = model,
         super(key: key);
 
-  final _snackBar = const SnackBar(
-    content: Text('no follow link'),
-  );
-
-  Future<void> _launchURL(String url, BuildContext context) async {
+  Future<void> _launchURL(String url) async {
     Uri uri = Uri.parse(url);
     if (!await launchUrl(
       uri,
@@ -127,7 +123,7 @@ class DetailsView extends StatelessWidget {
                   child: InkWell(
                     child: Text(_model?.officialSite as String),
                     onTap: () async {
-                      await _launchURL(_model?.officialSite as String, context);
+                      await _launchURL(_model?.officialSite as String);
                     },
                   ),
                 )
